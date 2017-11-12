@@ -1,0 +1,23 @@
+import telnetlib
+import datetime
+now = datetime.datetime.now()
+host = "192.168.1.2"
+username = "cisco"
+password = "cisco123"
+filename_prefix = "cisco-backup"
+tn = telnetlib.Telnet(host)
+tn.read_until ("username:")
+tn.write(username+"\n")
+tn.read_until("password:")
+tn.write(password+"\n")
+tn.write("terminal length 0"+"\n")
+tn.write("sh run"+"\n")
+tn.write("exit"+"\n")
+output=tn.read_all()
+
+
+filename = "%s_%.2i-%.2i-%i_%.2i-%.2i-%.2i" % (filename_prefix,now.day,now.month,now.year,now.minute,now.second)
+
+fp=open(filename,"telnet3")
+fp.write(output)
+fp.close()
